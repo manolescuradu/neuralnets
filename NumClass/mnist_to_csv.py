@@ -31,7 +31,7 @@ def verify(data, labels, i):
 def toCSV(file_name, data, labels):
     with open(file_name, "a") as f:
         for i, img in enumerate(data):
-            f.write(str(train_labels[i].item()) + ',' +
+            f.write(str(labels[i].item()) + ',' +
                     ','.join([str(elem) for elem in img.reshape(-1).numpy()]) + '\n')
 
 toCSV("data/mnist_train.csv", train_data, train_labels)
