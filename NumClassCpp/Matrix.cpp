@@ -1,27 +1,42 @@
 #include "Matrix.h"
 
-#include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <exception>
+#include <cassert>
 
 Matrix::Matrix(uint32_t rows, uint32_t cols)
 	: rows_(rows), cols_(cols), m_()
 {
-	m_.resize(cols_ * rows_);
+	m_.resize(rows_ * cols_);
 }
 
-float& Matrix::at(int x, int y)
+Matrix::Matrix(uint32_t rows, uint32_t cols, const std::vector<float>& in)
+	: Matrix(rows, cols)
 {
-	if (x < 0 || x > rows_ || y < 0 || y > cols_) {
-		std::ostringstream oss;
-		oss << "Invalid coordinates " << x << "," << y
-			<< " for matrix of size " << rows_ << "," << cols_ << "!\n";
+	assert(in.size() == rows * cols);
+	std::copy(in.begin(), in.end(), m_.begin());
+}
 
-		throw std::runtime_error(oss.str());
-	}
+float& Matrix::at(uint32_t x, uint32_t y)
+{
+	assert(x >= 0 && x < rows_ && y >= 0 && y < cols_);
 
 	return m_[x * cols_ + y];
+}
+
+Matrix Matrix::operator*(Matrix& v)
+{
+	assert(cols_ == v.rows_);
+
+	Matrix prod(rows_, v.cols_);
+
+	for (uint32_t i = 0; i < prod.rows_; ++i)
+		for (uint32_t j = 0; j < prod.cols_; ++j)
+			for (uint32_t k = 0; k < cols_; ++k)
+				prod.at(i, j) += this->at(i, k)* v.at(k, j);
+
+	return prod;
 }
 
 void Matrix::print()

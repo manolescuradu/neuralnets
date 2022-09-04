@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <sstream>
 #include <fstream>
+#include <cassert>
 
 Image::Image(const std::string& line, uint16_t imgx, uint16_t imgy)
     : label_(0xFF), img_(imgx, imgy)
@@ -16,13 +17,8 @@ Image::Image(const std::string& line, uint16_t imgx, uint16_t imgy)
 
     for (int x = 0; x < imgx; ++x) {
         for (int y = 0; y < imgy; ++y) {
-            if (std::getline(ss, val, ','))
-                img_.at(x, y) = static_cast<float>(atoi(val.c_str()));
-            else {
-                std::ostringstream oss;
-                oss << "Error loading pixel @ " << x << "," << y << "";
-                throw std::runtime_error(oss.str());
-            }
+            assert(std::getline(ss, val, ','));
+            img_.at(x, y) = static_cast<float>(atoi(val.c_str()));
         }
     }
 }
