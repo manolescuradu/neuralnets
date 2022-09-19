@@ -16,6 +16,9 @@ public:
 
 	void Matrix::print();
 
+	uint32_t rows() { return rows_; }
+	uint32_t cols() { return cols_; }
+
 private:
 	uint32_t rows_;
 	uint32_t cols_;
